@@ -1,0 +1,78 @@
+---
+title: "Evolutionary Game Theory App."
+author: "The easiest way to see dynamics at play!"
+date: "June 19, 2020"
+output: ioslides_presentation
+---
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{r, warning=F, message=F, error=F}
+library(phaseR)
+library(rSymPy) 
+library(deSolve)
+library(EvolutionaryGames)
+```
+
+
+
+## What is Evolutionary Game Theory?
+
+- Evolution is concerned with the way populations change over time. Evolutionary game theory (EGT) employs techniques from mathematics, social sciences and biology to study the change of a population of agents with different strategies or traits.
+
+
+- It combines the viewpoint of game theory of autonomous players having to take strategic decisions, and the viewpoint of evolutionary population dynamics where successful strategies increase their frequencies.
+
+[Click here for more information](https://plato.stanford.edu/entries/game-evolutionary/)
+
+
+## Model Description
+
+This application provides an interactive platform to explore a simple 2x2 prisoner's dilemma game with only 2 strategies: Coooperate and Defect. [Click here for more information](https://plato.stanford.edu/entries/prisoner-dilemma/)
+
+```{r gamepic, echo=FALSE, out.width = '50%'}
+knitr::include_graphics("dilemma-prisoners.jpg")
+```
+
+
+
+## Experimenting with Application
+
+1.Insert the following parameters to the application:
+
+```{r, echo=FALSE, out.width = '30%'}
+knitr::include_graphics("Image 1.png")
+```
+
+2.The following replicator equation is run:
+
+$$ p^{o} = p (\pi_{Cooperate} - \overline{\pi}))  $$
+
+```{r, echo=F}
+Replicator_plot <- function (t,p,parameters){
+    R <- parameters [1]
+    Pun <- parameters [2]
+    Tr <- parameters [3]
+    S <- parameters [4]
+    dp <- p*(S - Pun) + p**2*(R - Tr - 2*S + 2*Pun) + p**3*(S + Tr - Pun - R)
+    list(dp)
+  } 
+```
+
+
+***
+
+3.Finally, the following phase portrait is rendered:
+
+```{r, echo=T,fig.height=3, fig.width=3,message=F,error=F, size="tiny"}
+plot1 <- phasePortrait(Replicator_plot, ylim = c(0, 1),
+                   parameters = c(-1,-5,0,-20), 
+                   points = 10,xlab = "Proportion of Cooperators", ylab = "Change (dp)",
+                   lwd=4)
+```
+
+This plot shows that the population will ALWAYS converge to the strategy "defect" and cooperation will decay!
